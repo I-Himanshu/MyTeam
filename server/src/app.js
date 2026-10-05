@@ -5,6 +5,7 @@ import config from './config/index.js';
 import notFoundHandler from './middleware/notFoundHandler.js';
 import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 /**
  * Build the Express application.
@@ -43,6 +44,7 @@ export default function createApp(options = {}) {
   });
 
   apiRouter.use('/auth', authRoutes);
+  apiRouter.use('/users', userRoutes);
 
   app.use('/api', apiRouter);
 
