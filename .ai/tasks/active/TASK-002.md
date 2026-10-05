@@ -3,11 +3,11 @@ id: TASK-002
 title: MongoDB connection and User model
 team: backend
 priority: CRITICAL
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: backend
 dependencies: [TASK-001]
-branch: null
-pr: null
+branch: feature/TASK-002
+pr: https://github.com/I-Himanshu/MyTeam/pull/4
 review_cycles: 0
 ---
 
