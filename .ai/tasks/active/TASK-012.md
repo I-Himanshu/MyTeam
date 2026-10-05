@@ -3,8 +3,8 @@ id: TASK-012
 title: Registration page (US-001 frontend)
 team: frontend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: IN_PROGRESS
+assigned_agent: frontend-1
 dependencies: [TASK-010]
 branch: null
 pr: null

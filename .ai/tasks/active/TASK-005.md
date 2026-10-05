@@ -3,8 +3,8 @@ id: TASK-005
 title: POST /api/auth/login (US-002 backend)
 team: backend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: IN_PROGRESS
+assigned_agent: backend-1
 dependencies: [TASK-003, TASK-004]
 branch: null
 pr: null

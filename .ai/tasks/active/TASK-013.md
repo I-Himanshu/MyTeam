@@ -3,8 +3,8 @@ id: TASK-013
 title: Login page (US-002 frontend)
 team: frontend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: IN_PROGRESS
+assigned_agent: frontend-2
 dependencies: [TASK-010, TASK-011]
 branch: null
 pr: null
