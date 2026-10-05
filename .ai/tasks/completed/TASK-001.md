@@ -3,7 +3,7 @@ id: TASK-001
 title: Backend scaffolding — Express app, config, error envelope, and test tooling
 team: backend
 priority: CRITICAL
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend
 dependencies: []
 branch: feature/TASK-001
