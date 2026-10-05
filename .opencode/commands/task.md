@@ -18,9 +18,9 @@ Load the specified task and execute the appropriate developer workflow.
    - All dependencies in `dependencies` list must have status `MERGED` (or `dependencies` is empty `[]`).
    - If prerequisites or dependency states are not met, report the blocker and abort execution.
 5. **Determine the team** from the task's `team` field (`backend` or `frontend`).
-6. **Invoke the correct developer agent**:
-   - If `team: backend` → delegate to `@backend`
-   - If `team: frontend` → delegate to `@frontend`
+6. **Invoke the correct developer agent from worker pool**:
+   - If `team: backend` → delegate to `@backend-1`, `@backend-2`, `@backend-3`, `@backend-4` (or `@backend`)
+   - If `team: frontend` → delegate to `@frontend-1` or `@frontend-2` (or `@frontend`)
 7. **Pass the task context** to the developer agent, including:
    - The full task file content
    - Any relevant architecture or API contract information

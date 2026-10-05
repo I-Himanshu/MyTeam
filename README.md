@@ -36,20 +36,17 @@ Human (You)
     ↓
 Manager Agent (@manager)
     ├── Plans tasks from PRD
-    ├── Assigns tasks to developers
+    ├── Assigns tasks to parallel worker pools
     ├── Reviews Pull Requests
     └── Merges approved work
         ↓
-    ┌───────────────────────┐
-    │                       │
-Backend Agent           Frontend Agent
-(@backend)              (@frontend)
-    │                       │
-    ├── Creates branch      ├── Creates branch
-    ├── Implements code     ├── Implements code
-    ├── Writes tests        ├── Writes tests
-    ├── Creates PR          ├── Creates PR
-    └── Responds to review  └── Responds to review
+    ┌───────────────────────────────────┬───────────────────────────────────┐
+    │                                   │                                   │
+Backend Worker Pool                 Frontend Worker Pool
+  ├── @backend-1 (Worker #1)          ├── @frontend-1 (Worker #1)
+  ├── @backend-2 (Worker #2)          └── @frontend-2 (Worker #2)
+  ├── @backend-3 (Worker #3)
+  └── @backend-4 (Worker #4)
 ```
 
 ## 4. Directory Structure
