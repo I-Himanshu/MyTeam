@@ -3,7 +3,7 @@ id: TASK-004
 title: POST /api/auth/register (US-001 backend)
 team: backend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-1
 dependencies: [TASK-002, TASK-003]
 branch: feature/TASK-004

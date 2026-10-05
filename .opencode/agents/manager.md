@@ -50,8 +50,9 @@ When creating tasks from the PRD:
 
 ## Task Assignment
 
-- Assign `backend` tasks to the **Backend Developer Agent** (`@backend`).
-- Assign `frontend` tasks to the **Frontend Developer Agent** (`@frontend`).
+- Assign `backend` tasks to an available Backend Worker Agent: `@backend-1`, `@backend-2`, `@backend-3`, or `@backend-4` (or `@backend`).
+- Assign `frontend` tasks to an available Frontend Worker Agent: `@frontend-1` or `@frontend-2` (or `@frontend`).
+- Tasks with no mutual dependencies can be assigned simultaneously to different worker agents for parallel execution.
 - Never assign a task to an agent from the wrong team.
 - Only assign tasks whose dependencies are satisfied (`MERGED` or no dependencies).
 
