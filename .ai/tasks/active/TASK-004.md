@@ -3,11 +3,11 @@ id: TASK-004
 title: POST /api/auth/register (US-001 backend)
 team: backend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: backend-1
 dependencies: [TASK-002, TASK-003]
-branch: null
-pr: null
+branch: feature/TASK-004
+pr: https://github.com/I-Himanshu/MyTeam/pull/9
 review_cycles: 0
 ---
 
