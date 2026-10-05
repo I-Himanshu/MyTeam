@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { execFile } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import { loadConfig, REQUIRED_ENV_VARS } from '../../src/config/index.js';
 import testEnv from '../fixtures/testEnv.js';
@@ -95,15 +94,12 @@ describe('server startup', () => {
 
   it('starts and answers GET /api/health on the configured port', async () => {
     const port = 5099;
-    // The server connects to MongoDB before listening (fail fast), so the
-    // startup probe needs a real connection string — an in-memory server.
-    const mongoServer = await MongoMemoryServer.create();
     const child = execFile(
       process.execPath,
       [path.join(serverDir, 'src/server.js')],
       {
         cwd: fixturesDir,
-        env: { ...testEnv, PORT: `${port}`, MONGO_URI: mongoServer.getUri() },
+        env: { ...testEnv, PORT: `${port}` },
       },
       () => {},
     );
@@ -114,9 +110,8 @@ describe('server startup', () => {
       expect(response.body).toEqual({ success: true, data: { status: 'ok' } });
     } finally {
       child.kill('SIGTERM');
-      await mongoServer.stop();
     }
-  }, 120000);
+  });
 });
 
 async function waitForHealth(port, timeoutMs = 5000) {
