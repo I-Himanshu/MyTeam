@@ -3,11 +3,11 @@ id: TASK-011
 title: AuthContext and route guards (protected/public routes)
 team: frontend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: frontend-1
 dependencies: [TASK-010]
-branch: null
-pr: null
+branch: feature/TASK-011
+pr: https://github.com/I-Himanshu/MyTeam/pull/10
 review_cycles: 0
 ---
 
