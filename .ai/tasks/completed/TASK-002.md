@@ -3,7 +3,7 @@ id: TASK-002
 title: MongoDB connection and User model
 team: backend
 priority: CRITICAL
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend
 dependencies: [TASK-001]
 branch: feature/TASK-002
