@@ -3,7 +3,7 @@ id: TASK-011
 title: AuthContext and route guards (protected/public routes)
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend-1
 dependencies: [TASK-010]
 branch: feature/TASK-011
