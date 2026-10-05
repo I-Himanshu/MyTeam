@@ -1,0 +1,12 @@
+# Active Tasks
+
+This directory contains tasks that are currently actionable:
+
+- `READY` — Available for assignment
+- `IN_PROGRESS` — Being worked on by a developer agent
+- `SELF_TEST` — Implementation complete, tests running
+- `PR_CREATED` — Pull Request created, awaiting review
+- `MANAGER_REVIEW` — Under review by Manager
+- `CHANGES_REQUESTED` — Changes requested by Manager
+
+Run `/plan` to generate tasks from the PRD.

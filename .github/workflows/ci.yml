@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  ci:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ──────────────────────────────────────────────
+      # Backend CI
+      # ──────────────────────────────────────────────
+      - name: Check if server directory exists
+        id: check-server
+        run: |
+          if [ -d "server" ] && [ -f "server/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No server/ directory found — skipping backend CI"
+          fi
+
+      - name: Setup Node.js for backend
+        if: steps.check-server.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install backend dependencies
+        if: steps.check-server.outputs.exists == 'true'
+        working-directory: server
+        run: npm ci
+
+      - name: Run backend lint
+        if: steps.check-server.outputs.exists == 'true'
+        working-directory: server
+        run: npm run lint --if-present
+
+      - name: Run backend tests
+        if: steps.check-server.outputs.exists == 'true'
+        working-directory: server
+        run: npm test --if-present
+
+      - name: Run backend build
+        if: steps.check-server.outputs.exists == 'true'
+        working-directory: server
+        run: npm run build --if-present
+
+      # ──────────────────────────────────────────────
+      # Frontend CI
+      # ──────────────────────────────────────────────
+      - name: Check if client directory exists
+        id: check-client
+        run: |
+          if [ -d "client" ] && [ -f "client/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No client/ directory found — skipping frontend CI"
+          fi
+
+      - name: Setup Node.js for frontend
+        if: steps.check-client.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install frontend dependencies
+        if: steps.check-client.outputs.exists == 'true'
+        working-directory: client
+        run: npm ci
+
+      - name: Run frontend lint
+        if: steps.check-client.outputs.exists == 'true'
+        working-directory: client
+        run: npm run lint --if-present
+
+      - name: Run frontend tests
+        if: steps.check-client.outputs.exists == 'true'
+        working-directory: client
+        run: npm test --if-present
+
+      - name: Run frontend build
+        if: steps.check-client.outputs.exists == 'true'
+        working-directory: client
+        run: npm run build --if-present
+
+      # ──────────────────────────────────────────────
+      # Summary
+      # ──────────────────────────────────────────────
+      - name: CI Summary
+        run: |
+          echo "✅ CI pipeline completed"
+          echo ""
+          echo "Backend: ${{ steps.check-server.outputs.exists == 'true' && '✅ Checked' || '⏭️  Skipped (no server/ directory)' }}"
+          echo "Frontend: ${{ steps.check-client.outputs.exists == 'true' && '✅ Checked' || '⏭️  Skipped (no client/ directory)' }}"
+          echo ""
+          echo "Note: This is a Phase 1 demonstration repository."
+          echo "The CI pipeline will run real checks once the application code is added."
