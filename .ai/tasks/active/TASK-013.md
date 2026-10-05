@@ -3,11 +3,11 @@ id: TASK-013
 title: Login page (US-002 frontend)
 team: frontend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: frontend-2
 dependencies: [TASK-010, TASK-011]
-branch: null
-pr: null
+branch: feature/TASK-013
+pr: https://github.com/I-Himanshu/MyTeam/pull/13
 review_cycles: 0
 ---
 
