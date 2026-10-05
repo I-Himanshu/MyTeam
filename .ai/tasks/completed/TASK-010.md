@@ -3,7 +3,7 @@ id: TASK-010
 title: Frontend API service layer and JWT token storage
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend
 dependencies: [TASK-009]
 branch: feature/TASK-010

@@ -3,7 +3,7 @@ id: TASK-003
 title: Shared middleware — input validation helper, JWT auth guard, and token utility
 team: backend
 priority: CRITICAL
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend
 dependencies: [TASK-001]
 branch: feature/TASK-003
