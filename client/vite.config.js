@@ -11,6 +11,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.js'],
-    include: ['src/**/*.test.jsx'],
+    // TASK-010: service/util tests are plain `.test.js`; component tests stay `.test.jsx`.
+    include: ['src/**/*.test.{js,jsx}'],
   },
 });

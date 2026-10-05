@@ -3,11 +3,11 @@ id: TASK-010
 title: Frontend API service layer and JWT token storage
 team: frontend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: frontend
 dependencies: [TASK-009]
-branch: null
-pr: null
+branch: feature/TASK-010
+pr: https://github.com/I-Himanshu/MyTeam/pull/7
 review_cycles: 0
 ---
 
