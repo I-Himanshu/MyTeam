@@ -3,11 +3,11 @@ id: TASK-003
 title: Shared middleware — input validation helper, JWT auth guard, and token utility
 team: backend
 priority: CRITICAL
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: backend
 dependencies: [TASK-001]
-branch: null
-pr: null
+branch: feature/TASK-003
+pr: https://github.com/I-Himanshu/MyTeam/pull/6
 review_cycles: 0
 ---
 
