@@ -4,6 +4,7 @@ import cors from 'cors';
 import config from './config/index.js';
 import notFoundHandler from './middleware/notFoundHandler.js';
 import errorHandler from './middleware/errorHandler.js';
+import authRoutes from './routes/auth.routes.js';
 
 /**
  * Build the Express application.
@@ -40,6 +41,8 @@ export default function createApp(options = {}) {
   apiRouter.get('/health', (req, res) => {
     res.status(200).json({ success: true, data: { status: 'ok' } });
   });
+
+  apiRouter.use('/auth', authRoutes);
 
   app.use('/api', apiRouter);
 
