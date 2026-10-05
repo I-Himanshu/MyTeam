@@ -3,11 +3,11 @@ id: TASK-009
 title: Frontend scaffolding — Vite React app, routing skeleton, and test tooling
 team: frontend
 priority: CRITICAL
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: frontend
 dependencies: []
-branch: null
-pr: null
+branch: feature/TASK-009
+pr: https://github.com/I-Himanshu/MyTeam/pull/3
 review_cycles: 0
 ---
 
