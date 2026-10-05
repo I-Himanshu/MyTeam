@@ -1,6 +1,13 @@
 ---
 description: Manager Agent — coordinates task planning, assignment, review, and merge workflows
 mode: subagent
+permissions:
+  - action: shell
+    resource: "git checkout main*"
+    effect: deny
+  - action: shell
+    resource: "git push * main*"
+    effect: deny
 ---
 # Manager Agent
 
