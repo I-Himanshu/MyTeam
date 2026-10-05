@@ -3,11 +3,11 @@ id: TASK-012
 title: Registration page (US-001 frontend)
 team: frontend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: frontend-1
 dependencies: [TASK-010]
-branch: null
-pr: null
+branch: feature/TASK-012
+pr: https://github.com/I-Himanshu/MyTeam/pull/12
 review_cycles: 0
 ---
 
