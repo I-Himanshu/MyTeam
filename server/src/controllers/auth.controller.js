@@ -1,6 +1,9 @@
+import crypto from 'crypto';
+
 import User from '../models/User.js';
 import { UnauthorizedError, ValidationError } from '../utils/errors.js';
 import { generateToken } from '../utils/token.js';
+import { sendPasswordResetEmail } from '../utils/email.js';
 
 /**
  * Register a new user (POST /api/auth/register).
@@ -122,6 +125,106 @@ export async function login(req, res, next) {
       },
     });
   } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * Request a password reset (POST /api/auth/forgot-password).
+ *
+ * Always returns 200 with a generic message — even when the email is unknown —
+ * to prevent user enumeration. When the email exists, a crypto-random token is
+ * generated, its SHA-256 hash is stored with a 1-hour expiry, and a reset email
+ * is sent. The plaintext token is never stored or logged.
+ *
+ * @type {import('express').RequestHandler}
+ */
+export async function forgotPassword(req, res, next) {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = typeof email === 'string' ? email.toLowerCase() : email;
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Always return the same response to prevent user enumeration.
+    const genericMessage = 'If an account exists for that email, a reset link has been sent.';
+
+    if (!user) {
+      return res.status(200).json({ success: true, data: { message: genericMessage } });
+    }
+
+    // Generate a crypto-random token (32 bytes hex = 64 chars).
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    // Store only the SHA-256 hash — never the plaintext token.
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    try {
+      await sendPasswordResetEmail(user.email, resetToken);
+    } catch (emailError) {
+      // If email fails, clear the reset fields so the token can't be used.
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save();
+      return next(emailError);
+    }
+
+    return res.status(200).json({ success: true, data: { message: genericMessage } });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * Reset a password using a valid token (POST /api/auth/reset-password).
+ *
+ * Validates the token (exists, not expired), hashes the new password, clears
+ * the reset fields, and returns success. The token is single-use — it is
+ * cleared after a successful reset.
+ *
+ * @type {import('express').RequestHandler}
+ */
+export async function resetPassword(req, res, next) {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || typeof token !== 'string') {
+      return next(new ValidationError('Token is required', 'VALIDATION_ERROR'));
+    }
+
+    // Hash the provided token to compare with the stored hash.
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: new Date() },
+    }).select('+password');
+
+    if (!user) {
+      return next(new ValidationError('Invalid or expired token', 'VALIDATION_ERROR'));
+    }
+
+    // Update password — the pre-save hook handles hashing.
+    user.password = newPassword;
+    // Clear reset fields (single-use token).
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      data: { message: 'Password has been reset successfully' },
+    });
+  } catch (error) {
+    if (error?.name === 'ValidationError') {
+      const messages = Object.values(error.errors ?? {})
+        .map((entry) => entry?.message)
+        .filter(Boolean)
+        .join('; ');
+      return next(new ValidationError(messages || 'Validation failed', 'VALIDATION_ERROR'));
+    }
     return next(error);
   }
 }

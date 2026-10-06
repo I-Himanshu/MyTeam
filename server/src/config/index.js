@@ -43,6 +43,11 @@ export function loadConfig(env = process.env) {
     jwtSecret: `${env.JWT_SECRET}`,
     jwtExpiresIn: `${env.JWT_EXPIRES_IN}`,
     clientUrl: `${env.CLIENT_URL}`,
+    smtpHost: env.SMTP_HOST || '',
+    smtpPort: env.SMTP_PORT ? Number(env.SMTP_PORT) : 587,
+    smtpUser: env.SMTP_USER || '',
+    smtpPass: env.SMTP_PASS || '',
+    smtpFrom: env.SMTP_FROM || '',
   });
 }
 

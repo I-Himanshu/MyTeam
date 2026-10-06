@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import { login, me, register } from '../controllers/auth.controller.js';
+import { login, me, register, forgotPassword, resetPassword } from '../controllers/auth.controller.js';
 import authRateLimiter from '../middleware/rateLimiter.js';
 import requireAuth from '../middleware/requireAuth.js';
 import validate from '../middleware/validate.js';
@@ -48,12 +48,39 @@ export const loginValidation = [
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
+/**
+ * Validation chains for POST /api/auth/forgot-password.
+ */
+export const forgotPasswordValidation = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Must be a valid email address')
+    .normalizeEmail(),
+];
+
+/**
+ * Validation chains for POST /api/auth/reset-password.
+ */
+export const resetPasswordValidation = [
+  body('token').notEmpty().withMessage('Token is required'),
+  body('newPassword')
+    .notEmpty()
+    .withMessage('New password is required')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters'),
+];
+
 const router = Router();
 
 // Login/register share one IP-based budget (ENGINEERING_RULES §2.3).
 // GET /me is authenticated per-request and stays unlimited (YAGNI).
 router.post('/register', authRateLimiter, validate(registerValidation), register);
 router.post('/login', authRateLimiter, validate(loginValidation), login);
+router.post('/forgot-password', authRateLimiter, validate(forgotPasswordValidation), forgotPassword);
+router.post('/reset-password', authRateLimiter, validate(resetPasswordValidation), resetPassword);
 router.get('/me', requireAuth, me);
 
 export default router;
