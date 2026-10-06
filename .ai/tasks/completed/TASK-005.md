@@ -3,7 +3,7 @@ id: TASK-005
 title: POST /api/auth/login (US-002 backend)
 team: backend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-1
 dependencies: [TASK-003, TASK-004]
 branch: feature/TASK-005

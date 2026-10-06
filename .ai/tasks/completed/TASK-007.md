@@ -3,7 +3,7 @@ id: TASK-007
 title: GET/PUT /api/users/profile — view and update profile (US-004 backend)
 team: backend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-2
 dependencies: [TASK-002, TASK-003]
 branch: feature/TASK-007
