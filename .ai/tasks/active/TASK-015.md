@@ -3,8 +3,8 @@ id: TASK-015
 title: Profile page — view and edit name (US-004 frontend)
 team: frontend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: IN_PROGRESS
+assigned_agent: frontend-1
 dependencies: [TASK-007, TASK-011]
 branch: null
 pr: null
