@@ -3,7 +3,7 @@ id: TASK-015
 title: Profile page — view and edit name (US-004 frontend)
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend-1
 dependencies: [TASK-007, TASK-011]
 branch: feature/TASK-015
