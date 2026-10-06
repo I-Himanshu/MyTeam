@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import { register } from '../controllers/auth.controller.js';
+import { login, register } from '../controllers/auth.controller.js';
 import validate from '../middleware/validate.js';
 
 /**
@@ -32,8 +32,23 @@ export const registerValidation = [
     .withMessage('Password must be at least 8 characters'),
 ];
 
+/**
+ * Validation chains for POST /api/auth/login (API_CONTRACTS §2.2).
+ */
+export const loginValidation = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Must be a valid email address')
+    .normalizeEmail(),
+  body('password').notEmpty().withMessage('Password is required'),
+];
+
 const router = Router();
 
 router.post('/register', validate(registerValidation), register);
+router.post('/login', validate(loginValidation), login);
 
 export default router;

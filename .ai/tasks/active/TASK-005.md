@@ -3,11 +3,11 @@ id: TASK-005
 title: POST /api/auth/login (US-002 backend)
 team: backend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: backend-1
 dependencies: [TASK-003, TASK-004]
-branch: null
-pr: null
+branch: feature/TASK-005
+pr: https://github.com/I-Himanshu/MyTeam/pull/15
 review_cycles: 0
 ---
 
