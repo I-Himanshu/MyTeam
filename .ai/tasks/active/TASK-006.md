@@ -3,11 +3,11 @@ id: TASK-006
 title: GET /api/auth/me — current user session endpoint (US-003 backend)
 team: backend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: backend-3
 dependencies: [TASK-005]
-branch: null
-pr: null
+branch: feature/TASK-006
+pr: https://github.com/I-Himanshu/MyTeam/pull/18
 review_cycles: 0
 ---
 
