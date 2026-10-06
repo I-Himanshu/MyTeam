@@ -3,11 +3,11 @@ id: TASK-015
 title: Profile page — view and edit name (US-004 frontend)
 team: frontend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: frontend-1
 dependencies: [TASK-007, TASK-011]
-branch: null
-pr: null
+branch: feature/TASK-015
+pr: https://github.com/I-Himanshu/MyTeam/pull/19
 review_cycles: 0
 ---
 
