@@ -49,6 +49,39 @@ export async function register(req, res, next) {
 }
 
 /**
+ * Return the authenticated user's session identity (GET /api/auth/me).
+ *
+ * The user id always comes from `req.userId` (set by `requireAuth` from the
+ * JWT `sub` claim) — never from the URL or body — so a caller can only ever
+ * read their own session. The response follows API_CONTRACTS §2.3 exactly:
+ * `{ success: true, data: { id, name, email, createdAt } }` (no `updatedAt`).
+ * Fields are picked explicitly — never spread — so `password` and `__v` can
+ * never leak. A valid token whose user no longer exists yields 401
+ * `TOKEN_INVALID` ("Invalid token") rather than a 500.
+ *
+ * @type {import('express').RequestHandler}
+ */
+export async function me(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return next(new UnauthorizedError('Invalid token', 'TOKEN_INVALID'));
+    }
+    return res.status(200).json({
+      success: true,
+      data: {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
  * Authenticate a user with email and password (POST /api/auth/login).
  *
  * The lookup lowercases the email and explicitly selects `+password` because
