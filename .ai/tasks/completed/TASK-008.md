@@ -3,7 +3,7 @@ id: TASK-008
 title: Rate limiting and security hardening on authentication endpoints
 team: backend
 priority: MEDIUM
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-1
 dependencies: [TASK-005]
 branch: feature/TASK-008
