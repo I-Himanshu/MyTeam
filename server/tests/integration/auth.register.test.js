@@ -25,6 +25,10 @@ beforeAll(async () => {
     testUri = mongoServer.getUri();
   }
   await mongoose.connect(testUri);
+  // Await index build: the DUPLICATE_EMAIL tests rely on the unique email
+  // index, and creating users before the background build finishes would
+  // let duplicates slip through as 201s (observed flake under load).
+  await User.syncIndexes();
 }, 180000);
 
 afterAll(async () => {
