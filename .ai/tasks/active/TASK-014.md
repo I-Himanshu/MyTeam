@@ -3,11 +3,11 @@ id: TASK-014
 title: Protected dashboard with welcome message and logout (US-003 frontend)
 team: frontend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: frontend-2
 dependencies: [TASK-006, TASK-011]
-branch: null
-pr: null
+branch: feature/TASK-014
+pr: https://github.com/I-Himanshu/MyTeam/pull/21
 review_cycles: 0
 ---
 
