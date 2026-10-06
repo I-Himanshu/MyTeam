@@ -3,7 +3,7 @@ id: TASK-014
 title: Protected dashboard with welcome message and logout (US-003 frontend)
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend-2
 dependencies: [TASK-006, TASK-011]
 branch: feature/TASK-014
