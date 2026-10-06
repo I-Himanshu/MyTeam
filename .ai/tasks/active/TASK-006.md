@@ -3,8 +3,8 @@ id: TASK-006
 title: GET /api/auth/me — current user session endpoint (US-003 backend)
 team: backend
 priority: HIGH
-status: READY
-assigned_agent: null
+status: IN_PROGRESS
+assigned_agent: backend-3
 dependencies: [TASK-005]
 branch: null
 pr: null

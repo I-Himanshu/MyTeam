@@ -55,6 +55,7 @@ http://localhost:5000/api
 | 401 | `TOKEN_INVALID` | JWT token is malformed or invalid |
 | 403 | `FORBIDDEN` | User lacks permission for this action |
 | 404 | `NOT_FOUND` | Requested resource does not exist |
+| 429 | `RATE_LIMITED` | Too many requests — retry after the period stated in the `Retry-After` header |
 | 500 | `INTERNAL_ERROR` | Unexpected server error |
 
 ---
@@ -181,6 +182,14 @@ Authorization: Bearer <JWT_TOKEN>
   }
 }
 ```
+
+**Error Responses:**
+- Missing, malformed, or expired token → 401 `TOKEN_INVALID` /
+  `TOKEN_EXPIRED` (returned by the `requireAuth` middleware).
+- Valid token whose user no longer exists (account deleted after the
+  token was issued) → 401 `TOKEN_INVALID` with message
+  `"Invalid token"`. The token is treated as unusable rather than
+  surfacing a 500.
 
 ---
 
