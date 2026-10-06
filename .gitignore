@@ -4,6 +4,8 @@
 .env.local
 .env.development
 .env.production
+# ...but the documented template must stay versioned.
+!.env.example
 
 # Credentials & secrets
 credentials/

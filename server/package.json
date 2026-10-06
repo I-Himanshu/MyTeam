@@ -1,0 +1,36 @@
+{
+  "name": "myteam-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MyTeam Demo Application backend — Express API",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.7.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "mongodb-memory-server": "^10.0.0",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0",
+    "vitest": "^3.2.7"
+  }
+}

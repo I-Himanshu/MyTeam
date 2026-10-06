@@ -9,13 +9,19 @@
 
 This repository uses an AI Software Engineering Organization where a **Manager Agent** coordinates specialist **Developer Agents** to build software through structured tasks, Git workflows, and GitHub Pull Requests.
 
-**Phase 1 Agents:**
+**Phase 1 Agents & Worker Pools:**
 
-| Agent | Role | File |
-|-------|------|------|
+| Agent / Worker Pool | Role | File |
+|---------------------|------|------|
 | Manager | Task planning, review, coordination | `.opencode/agents/manager.md` |
-| Backend Developer | Backend implementation | `.opencode/agents/backend.md` |
-| Frontend Developer | Frontend implementation | `.opencode/agents/frontend.md` |
+| Backend Developer (Default/Alias) | Backend implementation | `.opencode/agents/backend.md` |
+| Backend Developer 1 | Backend Parallel Worker Pool #1 | `.opencode/agents/backend-1.md` |
+| Backend Developer 2 | Backend Parallel Worker Pool #2 | `.opencode/agents/backend-2.md` |
+| Backend Developer 3 | Backend Parallel Worker Pool #3 | `.opencode/agents/backend-3.md` |
+| Backend Developer 4 | Backend Parallel Worker Pool #4 | `.opencode/agents/backend-4.md` |
+| Frontend Developer (Default/Alias) | Frontend implementation | `.opencode/agents/frontend.md` |
+| Frontend Developer 1 | Frontend Parallel Worker Pool #1 | `.opencode/agents/frontend-1.md` |
+| Frontend Developer 2 | Frontend Parallel Worker Pool #2 | `.opencode/agents/frontend-2.md` |
 
 ---
 

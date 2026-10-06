@@ -1,6 +1,22 @@
 ---
 description: Frontend Developer Agent — implements UI components, state management, API integration, and frontend tests
 mode: subagent
+permissions:
+  - action: shell
+    resource: "git checkout main*"
+    effect: deny
+  - action: shell
+    resource: "git checkout develop*"
+    effect: allow
+  - action: shell
+    resource: "git merge *"
+    effect: deny
+  - action: shell
+    resource: "git push * main*"
+    effect: deny
+  - action: shell
+    resource: "git push * develop*"
+    effect: deny
 ---
 # Frontend Developer Agent
 

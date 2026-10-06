@@ -36,20 +36,17 @@ Human (You)
     ↓
 Manager Agent (@manager)
     ├── Plans tasks from PRD
-    ├── Assigns tasks to developers
+    ├── Assigns tasks to parallel worker pools
     ├── Reviews Pull Requests
     └── Merges approved work
         ↓
-    ┌───────────────────────┐
-    │                       │
-Backend Agent           Frontend Agent
-(@backend)              (@frontend)
-    │                       │
-    ├── Creates branch      ├── Creates branch
-    ├── Implements code     ├── Implements code
-    ├── Writes tests        ├── Writes tests
-    ├── Creates PR          ├── Creates PR
-    └── Responds to review  └── Responds to review
+    ┌───────────────────────────────────┬───────────────────────────────────┐
+    │                                   │                                   │
+Backend Worker Pool                 Frontend Worker Pool
+  ├── @backend-1 (Worker #1)          ├── @frontend-1 (Worker #1)
+  ├── @backend-2 (Worker #2)          └── @frontend-2 (Worker #2)
+  ├── @backend-3 (Worker #3)
+  └── @backend-4 (Worker #4)
 ```
 
 ## 4. Directory Structure
@@ -228,7 +225,63 @@ See all tasks, their statuses, and pending work.
 | Real application code | 1 (via agents) | Created by running the workflow |
 | Production deployment | 2+ | Docker, cloud infrastructure |
 
-## 12. Future Phase 2 Ideas
+## 12. Running the Demo App Locally
+
+The demo MERN app lives in `server/` (Express API, port 5000) and `client/`
+(React + Vite, port 3000). See [.ai/ARCHITECTURE.md](.ai/ARCHITECTURE.md) §1
+for the system diagram.
+
+### Prerequisites
+
+- Node.js >= 18 and npm
+- MongoDB: a local `mongod` on `mongodb://localhost:27017/myteam`, or any
+  reachable instance via `MONGO_URI`. (Tests use `mongodb-memory-server`
+  automatically — no local MongoDB needed for `npm test` in `server/`.)
+
+### Setup
+
+```bash
+# Install dependencies (root orchestrator + both apps)
+npm install
+npm install --prefix server
+npm install --prefix client
+
+# Configure environment (templates are versioned; `.env` files are gitignored)
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+# Edit server/.env: set MONGO_URI, JWT_SECRET, JWT_EXPIRES_IN.
+# CLIENT_URL must match the client dev origin (http://localhost:3000) or
+# browsers will block API calls via CORS.
+```
+
+### Run (single command)
+
+```bash
+npm run dev
+```
+
+Starts the API on http://localhost:5000 and the client on
+http://localhost:3000 concurrently (`concurrently` output is prefixed
+`[server]` / `[client]`).
+
+### Test, lint, build
+
+```bash
+npm test    # server (136 tests) + client (74 tests)
+npm run lint   # eslint in both packages
+npm run build  # production build of client/ (outputs client/dist/)
+```
+
+### Ports summary
+
+| Service | URL | Source |
+|---------|-----|--------|
+| Client (Vite dev) | http://localhost:3000 | `client/vite.config.js` |
+| API (Express) | http://localhost:5000/api | `server/.env` `PORT` |
+| API base for client | `VITE_API_BASE_URL` (default `http://localhost:5000/api`) | `client/.env` |
+| CORS allow-list | `CLIENT_URL` (must be `http://localhost:3000`) | `server/.env` |
+
+## 13. Future Phase 2 Ideas
 
 - **QA Agent** — Automated test verification, coverage analysis, regression detection
 - **DevOps Agent** — CI/CD pipeline management, deployment automation
