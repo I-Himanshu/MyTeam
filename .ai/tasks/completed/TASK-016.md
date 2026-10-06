@@ -3,7 +3,7 @@ id: TASK-016
 title: Local dev integration — root `npm run dev`, docs, and end-to-end smoke verification
 team: backend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-2
 dependencies: [TASK-008, TASK-012, TASK-013, TASK-014, TASK-015]
 branch: feature/TASK-016
