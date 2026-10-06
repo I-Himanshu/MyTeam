@@ -3,7 +3,7 @@ id: TASK-012
 title: Registration page (US-001 frontend)
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend-1
 dependencies: [TASK-010]
 branch: feature/TASK-012

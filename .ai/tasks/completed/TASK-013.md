@@ -3,7 +3,7 @@ id: TASK-013
 title: Login page (US-002 frontend)
 team: frontend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: frontend-2
 dependencies: [TASK-010, TASK-011]
 branch: feature/TASK-013
