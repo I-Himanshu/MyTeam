@@ -1,61 +1,68 @@
 ---
-description: Show project status — Display tasks, PRs, branches, and pending work
+description: Show project status — Reconcile tasks, GitHub Issues, PRs, GitHub Project #3 board, and Git state
 agent: manager
 ---
 You are the Manager Agent executing the `/status` command.
 
 ## Your Goal
 
-Provide a comprehensive status report of the project.
+Provide a comprehensive status report by reconciling local task files, Git state, GitHub Issues, PRs, and GitHub Project #3 items.
 
 ## Steps
 
-1. **Read all task files** from:
+1. **Read all local task files**:
    - `.ai/tasks/active/` — active tasks
    - `.ai/tasks/completed/` — completed tasks
    - `.ai/tasks/blocked/` — blocked tasks
 
-2. **Check Git state**:
+2. **Query GitHub state**:
+   ```bash
+   gh issue list --state all
+   gh pr list --state all
+   gh project item-list 3 --owner I-Himanshu
+   ```
+
+3. **Check Git state**:
    ```bash
    git branch -a
    git status
    git log --oneline -10
    ```
 
-3. **Generate a status report** with these sections:
+4. **Generate a reconciled status report** with these sections:
 
-### 📋 Active Tasks
-List all tasks in `.ai/tasks/active/` with: ID, title, status, team, assigned agent, priority.
+### 📋 Active Tasks & Project Board State
+List tasks in `.ai/tasks/active/` & Project #3: ID, title, Project #3 Status (`Backlog`, `Ready`, `In progress`, `In review`, `Changes requested`, `QA`, `Done`), assigned `AI Agent`, priority, and corresponding GitHub Issue.
 
 ### 🚫 Blocked Tasks
-List all tasks in `.ai/tasks/blocked/` with: ID, title, reason blocked.
+List tasks in `.ai/tasks/blocked/`: ID, title, reason blocked, review note path.
 
 ### ✅ Completed Tasks
-List all tasks in `.ai/tasks/completed/` with: ID, title, completion info.
+List tasks in `.ai/tasks/completed/`: ID, title, PR URL, completion date.
 
-### 🔀 Pull Requests Under Review
-List any tasks with status `PR_CREATED` or `MANAGER_REVIEW`.
+### 🔀 Pull Requests & Code Reviews
+List open PRs, their head branches, target (`develop`), review state, and assigned reviewer.
 
-### 🌿 Current Branch State
-Show:
-- Current branch
-- All local branches
-- Relationship to `develop`
+### 🌿 Git & Branch State
+Show current branch, local/remote feature branches, and cleanliness of working tree.
 
-### 📌 Pending Work
-List tasks with status `READY` that can be started (dependencies satisfied).
+### 📌 Unclaimed & Ready Work
+List tasks with Project #3 status `Ready` and `AI Agent = unassigned` that are ready for worker agents to claim.
 
 ### 📊 Summary Statistics
-- Total tasks: X
-- Completed: X
+- Total Tasks: X
+- Completed / Done: X
+- In QA: X
+- Under Review: X
+- Changes Requested: X
 - In Progress: X
 - Ready: X
 - Blocked: X
-- PRs Pending Review: X
 
 ## Rules
 
-- Report factual information only.
-- Do NOT create or modify any tasks.
-- Do NOT implement any code.
-- If no tasks exist yet, suggest running `/plan` first.
+- Report factual empirical information only.
+- Reconcile any mismatch between local task files and GitHub Project #3 state.
+- Do NOT create or modify tasks.
+- Do NOT implement code.
+

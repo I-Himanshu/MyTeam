@@ -1,39 +1,46 @@
 ---
-description: Execute a specific task — Load task and run the appropriate developer workflow
+description: Execute a specific task — Load task, verify GitHub Project #3 ownership, and execute the developer workflow
 ---
 You are executing the `/task` command.
 
 ## Your Goal
 
-Load the specified task and execute the appropriate developer workflow.
+Load the specified task, verify GitHub Project #3 ownership, and execute the appropriate developer workflow.
 
 ## Steps
 
 1. **Parse the task ID** from the user's input (e.g., `/task TASK-001`).
-2. **Find the task file** in `.ai/tasks/active/TASK-XXX.md`.
+2. **Find the task file** in `.ai/tasks/active/TASK-XXX.md` (or inspect Project #3 board).
 3. **Read the task file** completely.
-4. **Verify prerequisites**:
-   - Task status must be `READY` or `CHANGES_REQUESTED`.
-   - Verify `assigned_agent` is `null` (or matches the executing team agent).
-   - All dependencies in `dependencies` list must have status `MERGED` (or `dependencies` is empty `[]`).
+4. **Verify prerequisites & task locking**:
+   - Task status must be `READY` or `CHANGES_REQUESTED` (Project #3 status `Ready` or `Changes requested`).
+   - Check `AI Agent` on GitHub Project #3: MUST match executing worker agent (e.g., `backend-1`) or be `unassigned`.
+   - If another worker agent currently owns the task (`In progress` under another `AI Agent`), STOP immediately.
+   - All dependencies in `dependencies` list must have status `MERGED` / `Done`.
    - If prerequisites or dependency states are not met, report the blocker and abort execution.
-5. **Determine the team** from the task's `team` field (`backend` or `frontend`).
-6. **Invoke the correct developer agent from worker pool**:
-   - If `team: backend` → delegate to `@backend-1`, `@backend-2`, `@backend-3`, `@backend-4` (or `@backend`)
-   - If `team: frontend` → delegate to `@frontend-1` or `@frontend-2` (or `@frontend`)
-7. **Pass the task context** to the developer agent, including:
-   - The full task file content
-   - Any relevant architecture or API contract information
-   - The expected branch name (`feature/TASK-XXX` or `bugfix/TASK-XXX`)
-8. **Update task status** atomically: set `status: IN_PROGRESS` and `assigned_agent: backend` (or `frontend`).
+5. **Claim task & sync board**:
+   - Set Project #3 status to `In progress` and `AI Agent` to executing agent.
+   - Set task file `status: IN_PROGRESS` and `assigned_agent: <worker-id>`.
+6. **Execute Developer Workflow**:
+   - Checkout branch `feature/TASK-XXX` from `develop`.
+   - Implement requirements and tests.
+   - Run verification suite (`npm test`, `npm run lint`, `npm run build`).
+   - Commit changes (Conventional Commits with `Task: TASK-XXX`).
+   - Push branch to remote.
+   - Create PR targeting `develop` using `.github/pull_request_template.md`.
+7. **Sync Board on PR Creation**:
+   - Set Project #3 status to `In review`.
+   - Set task file `status: PR_CREATED`, update `branch` and `pr` fields.
+   - Request review from Manager Agent.
 
 ## If No Task ID Is Provided
 
-List all tasks with status `READY` and ask which one to execute.
+Inspect GitHub Project #3 board and `.ai/tasks/active/` for unclaimed tasks with status `Ready` assigned to your worker pool.
 
 ## Rules
 
 - Do NOT start a task whose dependencies are not satisfied.
-- Do NOT assign a backend task to the frontend agent or vice versa.
-- Do NOT skip reading the task file.
-- The developer agent must follow its full workflow as defined in its agent file.
+- Do NOT claim a task already owned by another worker agent.
+- Do NOT merge your own PR. Yield to Manager review.
+- The developer agent must follow its full workflow as defined in its agent file and `.ai/TEAM_WORKFLOW.md`.
+
