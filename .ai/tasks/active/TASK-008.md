@@ -3,11 +3,11 @@ id: TASK-008
 title: Rate limiting and security hardening on authentication endpoints
 team: backend
 priority: MEDIUM
-status: READY
-assigned_agent: null
+status: PR_CREATED
+assigned_agent: backend-1
 dependencies: [TASK-005]
-branch: null
-pr: null
+branch: feature/TASK-008
+pr: https://github.com/I-Himanshu/MyTeam/pull/22
 review_cycles: 0
 ---
 
