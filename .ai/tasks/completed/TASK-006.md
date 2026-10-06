@@ -3,7 +3,7 @@ id: TASK-006
 title: GET /api/auth/me — current user session endpoint (US-003 backend)
 team: backend
 priority: HIGH
-status: PR_CREATED
+status: MERGED
 assigned_agent: backend-3
 dependencies: [TASK-005]
 branch: feature/TASK-006
