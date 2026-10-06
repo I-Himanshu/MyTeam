@@ -3,11 +3,11 @@ id: TASK-007
 title: GET/PUT /api/users/profile — view and update profile (US-004 backend)
 team: backend
 priority: HIGH
-status: IN_PROGRESS
+status: PR_CREATED
 assigned_agent: backend-2
 dependencies: [TASK-002, TASK-003]
-branch: null
-pr: null
+branch: feature/TASK-007
+pr: https://github.com/I-Himanshu/MyTeam/pull/14
 review_cycles: 0
 ---
 
