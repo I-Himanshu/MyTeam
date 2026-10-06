@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 
 import { login, me, register } from '../controllers/auth.controller.js';
+import authRateLimiter from '../middleware/rateLimiter.js';
 import requireAuth from '../middleware/requireAuth.js';
 import validate from '../middleware/validate.js';
 
@@ -49,8 +50,10 @@ export const loginValidation = [
 
 const router = Router();
 
-router.post('/register', validate(registerValidation), register);
-router.post('/login', validate(loginValidation), login);
+// Login/register share one IP-based budget (ENGINEERING_RULES §2.3).
+// GET /me is authenticated per-request and stays unlimited (YAGNI).
+router.post('/register', authRateLimiter, validate(registerValidation), register);
+router.post('/login', authRateLimiter, validate(loginValidation), login);
 router.get('/me', requireAuth, me);
 
 export default router;
