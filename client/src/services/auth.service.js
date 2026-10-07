@@ -33,3 +33,23 @@ export async function me() {
   const response = await api.get('/auth/me');
   return response.data;
 }
+
+/**
+ * Request a password reset email.
+ * @param {{ email: string }} payload
+ * @returns {Promise<{ success: boolean, data: object }>}
+ */
+export async function forgotPassword(payload) {
+  const response = await api.post('/auth/forgot-password', payload);
+  return response.data;
+}
+
+/**
+ * Reset a password using a token from the reset email.
+ * @param {{ token: string, newPassword: string }} payload
+ * @returns {Promise<{ success: boolean, data: object }>}
+ */
+export async function resetPassword(payload) {
+  const response = await api.post('/auth/reset-password', payload);
+  return response.data;
+}
