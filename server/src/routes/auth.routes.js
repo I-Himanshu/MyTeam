@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import { login, me, register, forgotPassword, resetPassword } from '../controllers/auth.controller.js';
+import { login, me, register, forgotPassword, resetPassword, verifyEmail, resendVerification } from '../controllers/auth.controller.js';
 import authRateLimiter from '../middleware/rateLimiter.js';
 import requireAuth from '../middleware/requireAuth.js';
 import validate from '../middleware/validate.js';
@@ -81,6 +81,8 @@ router.post('/register', authRateLimiter, validate(registerValidation), register
 router.post('/login', authRateLimiter, validate(loginValidation), login);
 router.post('/forgot-password', authRateLimiter, validate(forgotPasswordValidation), forgotPassword);
 router.post('/reset-password', authRateLimiter, validate(resetPasswordValidation), resetPassword);
+router.get('/verify-email', authRateLimiter, verifyEmail);
+router.post('/resend-verification', authRateLimiter, requireAuth, resendVerification);
 router.get('/me', requireAuth, me);
 
 export default router;

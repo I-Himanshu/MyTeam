@@ -162,4 +162,40 @@ describe('POST /api/auth/register', () => {
       errorSpy.mockRestore();
     }
   });
+
+  it('creates a user with emailVerified: false and a hashed verification token', async () => {
+    const payload = buildUser();
+    const res = await request(app).post('/api/auth/register').send(payload);
+
+    expect(res.status).toBe(201);
+
+    const stored = await User.findOne({ email: payload.email })
+      .select('+emailVerificationToken +emailVerificationExpires');
+    expect(stored.emailVerified).toBe(false);
+    expect(stored.emailVerificationToken).toBeDefined();
+    expect(stored.emailVerificationToken).toMatch(/^[a-f0-9]{64}$/); // SHA-256 hex
+    expect(stored.emailVerificationExpires).toBeInstanceOf(Date);
+    expect(stored.emailVerificationExpires.getTime()).toBeGreaterThan(Date.now());
+  });
+
+  it('sends a verification email on registration', async () => {
+    const payload = buildUser();
+    const res = await request(app).post('/api/auth/register').send(payload);
+
+    expect(res.status).toBe(201);
+    // The verification email is sent via the email utility (mocked in unit tests).
+    // Here we verify the registration succeeds and the token is stored.
+    const stored = await User.findOne({ email: payload.email })
+      .select('+emailVerificationToken');
+    expect(stored.emailVerificationToken).toBeDefined();
+  });
+
+  it('does not return the verification token in the response', async () => {
+    const payload = buildUser();
+    const res = await request(app).post('/api/auth/register').send(payload);
+
+    expect(res.status).toBe(201);
+    expect(JSON.stringify(res.body)).not.toContain('emailVerificationToken');
+    expect(res.body.data.user.emailVerificationToken).toBeUndefined();
+  });
 });

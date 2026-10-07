@@ -174,6 +174,48 @@ describe('email normalization', () => {
   });
 });
 
+describe('email verification fields', () => {
+  it('defaults emailVerified to false', async () => {
+    const user = await User.create(buildUser());
+
+    expect(user.emailVerified).toBe(false);
+  });
+
+  it('excludes emailVerificationToken and emailVerificationExpires from query results by default', async () => {
+    const user = await User.create(buildUser({
+      emailVerificationToken: 'some-hash',
+      emailVerificationExpires: new Date(Date.now() + 86400000),
+    }));
+
+    const found = await User.findOne({ email: user.email });
+    expect(found.emailVerificationToken).toBeUndefined();
+    expect(found.emailVerificationExpires).toBeUndefined();
+  });
+
+  it('includes emailVerificationToken and emailVerificationExpires when explicitly selected', async () => {
+    const user = await User.create(buildUser({
+      emailVerificationToken: 'some-hash',
+      emailVerificationExpires: new Date(Date.now() + 86400000),
+    }));
+
+    const found = await User.findOne({ email: user.email })
+      .select('+emailVerificationToken +emailVerificationExpires');
+    expect(found.emailVerificationToken).toBe('some-hash');
+    expect(found.emailVerificationExpires).toBeInstanceOf(Date);
+  });
+
+  it('strips emailVerificationToken and emailVerificationExpires from toJSON output', async () => {
+    const user = await User.create(buildUser({
+      emailVerificationToken: 'some-hash',
+      emailVerificationExpires: new Date(Date.now() + 86400000),
+    }));
+
+    const json = user.toJSON();
+    expect(json.emailVerificationToken).toBeUndefined();
+    expect(json.emailVerificationExpires).toBeUndefined();
+  });
+});
+
 describe('validation', () => {
   it.each([
     ['name shorter than 2 chars', { name: 'A' }],
