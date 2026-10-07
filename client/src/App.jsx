@@ -5,9 +5,11 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import PublicRoute from './components/PublicRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import styles from './App.module.css';
 
 // Route guards (TASK-011, ARCHITECTURE §4.1): `/dashboard` and `/profile`
@@ -33,6 +35,22 @@ function App() {
             element={
               <PublicRoute>
                 <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPasswordPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPasswordPage />
               </PublicRoute>
             }
           />
