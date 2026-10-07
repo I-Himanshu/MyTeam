@@ -26,6 +26,14 @@ const userSchema = new mongoose.Schema(
       minlength: [8, 'Password must be at least 8 characters'],
       select: false, // Never include password in query results by default
     },
+    passwordResetToken: {
+      type: String,
+      select: false, // Never include reset token in query results by default
+    },
+    passwordResetExpires: {
+      type: Date,
+      select: false, // Never include reset expiry in query results by default
+    },
   },
   {
     timestamps: true, // Automatically manage createdAt and updatedAt

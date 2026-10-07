@@ -29,6 +29,11 @@ describe('loadConfig', () => {
       jwtSecret: testEnv.JWT_SECRET,
       jwtExpiresIn: testEnv.JWT_EXPIRES_IN,
       clientUrl: testEnv.CLIENT_URL,
+      smtpHost: '',
+      smtpPort: 587,
+      smtpUser: '',
+      smtpPass: '',
+      smtpFrom: '',
     });
     expect(Object.isFrozen(loadConfig(testEnv))).toBe(true);
   });
