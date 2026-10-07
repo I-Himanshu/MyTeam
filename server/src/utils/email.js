@@ -62,4 +62,38 @@ export async function sendPasswordResetEmail(to, token) {
   return info;
 }
 
-export default { sendPasswordResetEmail };
+/**
+ * Send an email verification email to the user.
+ *
+ * The email contains a link with the verification token. The token is never
+ * logged or stored in plaintext — only its SHA-256 hash is persisted in the
+ * database.
+ *
+ * @param {string} to Recipient email address.
+ * @param {string} token Plaintext verification token (hashed before storage).
+ * @returns {Promise<import('nodemailer').SentMessageInfo>} Send result.
+ */
+export async function sendVerificationEmail(to, token) {
+  const { smtpFrom } = config;
+  const transporter = createTransporter();
+  const verifyUrl = `${config.clientUrl}/verify-email?token=${token}`;
+
+  const info = await transporter.sendMail({
+    from: smtpFrom,
+    to,
+    subject: 'Verify Your Email',
+    text: `Please verify your email by clicking this link: ${verifyUrl}\n\n` +
+      `Or use this token: ${token}\n\n` +
+      `This link expires in 24 hours. If you did not create an account, ignore this email.`,
+    html: `
+      <p>Please verify your email by clicking the link below:</p>
+      <p><a href="${verifyUrl}">${verifyUrl}</a></p>
+      <p>Or use this token: <code>${token}</code></p>
+      <p>This link expires in 24 hours. If you did not create an account, ignore this email.</p>
+    `,
+  });
+
+  return info;
+}
+
+export default { sendPasswordResetEmail, sendVerificationEmail };

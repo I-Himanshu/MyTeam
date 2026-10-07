@@ -34,13 +34,29 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false, // Never include reset expiry in query results by default
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      select: false, // Never include verification token in query results by default
+    },
+    emailVerificationExpires: {
+      type: Date,
+      select: false, // Never include verification expiry in query results by default
+    },
   },
   {
     timestamps: true, // Automatically manage createdAt and updatedAt
     toJSON: {
-      // Serialization must never leak the password hash or __v.
+      // Serialization must never leak the password hash, tokens, or __v.
       transform: (_doc, ret) => {
         delete ret.password;
+        delete ret.passwordResetToken;
+        delete ret.passwordResetExpires;
+        delete ret.emailVerificationToken;
+        delete ret.emailVerificationExpires;
         delete ret.__v;
         return ret;
       },

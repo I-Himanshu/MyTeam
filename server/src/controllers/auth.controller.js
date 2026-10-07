@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import User from '../models/User.js';
 import { UnauthorizedError, ValidationError } from '../utils/errors.js';
 import { generateToken } from '../utils/token.js';
-import { sendPasswordResetEmail } from '../utils/email.js';
+import { sendPasswordResetEmail, sendVerificationEmail } from '../utils/email.js';
 
 /**
  * Register a new user (POST /api/auth/register).
@@ -21,8 +21,29 @@ export async function register(req, res, next) {
   try {
     const { name, email, password } = req.body;
 
-    const user = await User.create({ name, email, password });
+    // Generate a crypto-random verification token (32 bytes hex = 64 chars).
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    // Store only the SHA-256 hash — never the plaintext token.
+    const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+    });
     const token = generateToken(user._id.toString());
+
+    try {
+      await sendVerificationEmail(user.email, verificationToken);
+    } catch (emailError) {
+      // If email fails, clear the verification fields so the token can't be used.
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpires = undefined;
+      await user.save();
+      return next(emailError);
+    }
 
     return res.status(201).json({
       success: true,
@@ -225,6 +246,97 @@ export async function resetPassword(req, res, next) {
         .join('; ');
       return next(new ValidationError(messages || 'Validation failed', 'VALIDATION_ERROR'));
     }
+    return next(error);
+  }
+}
+
+/**
+ * Verify a user's email using a token (GET /api/auth/verify-email).
+ *
+ * Validates the token (exists, not expired), sets `emailVerified: true`,
+ * clears the verification fields, and returns success. The token is
+ * single-use — it is cleared after a successful verification.
+ *
+ * @type {import('express').RequestHandler}
+ */
+export async function verifyEmail(req, res, next) {
+  try {
+    const { token } = req.query;
+
+    if (!token || typeof token !== 'string') {
+      return next(new ValidationError('Verification token is required', 'VALIDATION_ERROR'));
+    }
+
+    // Hash the provided token to compare with the stored hash.
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return next(new ValidationError('Invalid or expired verification token', 'VALIDATION_ERROR'));
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      data: { message: 'Email verified successfully' },
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * Resend a verification email to the authenticated user (POST /api/auth/resend-verification).
+ *
+ * Generates a new verification token, stores its hash with a 24-hour expiry,
+ * and sends a new verification email. Returns 400 if the user is already verified.
+ *
+ * @type {import('express').RequestHandler}
+ */
+export async function resendVerification(req, res, next) {
+  try {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return next(new UnauthorizedError('Invalid token', 'TOKEN_INVALID'));
+    }
+
+    if (user.emailVerified) {
+      return next(new ValidationError('Email is already verified', 'VALIDATION_ERROR'));
+    }
+
+    // Generate a new crypto-random token (32 bytes hex = 64 chars).
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    // Store only the SHA-256 hash — never the plaintext token.
+    const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+
+    user.emailVerificationToken = hashedToken;
+    user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    await user.save();
+
+    try {
+      await sendVerificationEmail(user.email, verificationToken);
+    } catch (emailError) {
+      // If email fails, clear the verification fields so the token can't be used.
+      user.emailVerificationToken = undefined;
+      user.emailVerificationExpires = undefined;
+      await user.save();
+      return next(emailError);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: { message: 'Verification email has been resent' },
+    });
+  } catch (error) {
     return next(error);
   }
 }
